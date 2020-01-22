@@ -1,0 +1,16 @@
+.collection-item .subtitle {
+	font-size: smaller;
+}
+
+.collection-item .circle {
+	border-radius: 0px;
+}
+
+.bottom-space {
+	margin-bottom: 60px;
+}
+
+.ad-title {
+	font-size: larger;
+	font-weight: bold;
+}

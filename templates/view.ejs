@@ -1,0 +1,24 @@
+<img class="responsive-img z-depth-3" src="{{APP_IMAGE_PATH}}<%= ad.image %>" alt="<%= ad.image %>">
+
+<div class="row">
+	<div class="col s12">
+		<p class="ad-title"><%= ad.title %></p>
+		<p><%- ad.description %></p>
+	</div>
+
+	<div class="col s12">
+		<% if(isEmail) { %>
+			<a class="btn waves-effect waves-light" href="mailto:<%= ad.author %>?subject=Sobre <%= ad.title %>">Contactar</a>
+		<% } else { %>
+			<a class="btn waves-effect waves-light" href="<%= ad.link %>"><%= ad.caption %></a>
+		<% } %>
+	</div>
+</div>
+
+<div class="bottom-space"></div>
+
+<div class="fixed-action-btn hide-on-share">
+	<a class="btn-floating btn-large waves-effect waves-light" href="#!" onclick="apretaste.send({'command':'ADS LIST'})">
+		<i class="material-icons">arrow_back</i>
+	</a>
+</div>
