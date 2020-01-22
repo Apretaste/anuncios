@@ -27,11 +27,11 @@ class Service
 	public function _list(Request $request, Response &$response)
 	{
 		// get the ads with better CTR
+		$where = Ad::getFilters($request->person);
 		$ads = Database::query("
 			SELECT id, title, subtitle, icon, ROUND((clicks * 100) / impressions) AS ctr
 			FROM ads 
-			WHERE active = 1
-			AND expires >= CURRENT_TIMESTAMP
+			$where
 			ORDER BY ((clicks * 100) / impressions) DESC
 			LIMIT 10");
 
@@ -54,11 +54,16 @@ class Service
 	 */
 	public function _view(Request $request, Response &$response)
 	{
-		// get the ID
+		// get the ad's id
 		$id = $request->input->data->id;
 
-		// get the ad
-		$ad = Ad::getById($id);
+		// get ad by id
+		$where = Ad::getFilters($request->person);
+		$ad = Database::query("
+			SELECT title, description, image, link, caption, author 
+			FROM ads 
+			$where
+			AND id = $id");
 
 		// do not continue if ad cannot be found
 		if (empty($ad)) {
@@ -70,29 +75,21 @@ class Service
 				"button" => ["href" => "ADS LIST", "caption" => "Ver anuncios"]]);
 		}
 
-		// keep only important properties
-		$props = ['title','description','image','link','caption','author'];
-		foreach ($ad as $key=>$val) {
-			if(!in_array($key, $props)) {
-				unset($ad->$key);
-			}
-		}
-
-		// make break lines into <br> for the desc
-		$ad->description = nl2br($ad->description);
-
 		// increate the ad's clicks
 		Database::query("UPDATE ads SET clicks=clicks+1 WHERE id=$id");
+
+		// make the description into HTML
+		$ad[0]->description = nl2br($ad[0]->description);
 
 		// create the content for the view
 		$content = [
 			'isEmail' => $request->input->method == 'email',
-			'ad' => $ad];
+			'ad' => $ad[0]];
 
 		// get image for the view
 		$image = [];
-		if($ad->image) {
-			$image[] = SHARED_PATH . 'ads/' . $ad->image;
+		if($ad[0]->image) {
+			$image[] = SHARED_PATH . 'ads/' . $ad[0]->image;
 		}
 
 		// send data to the view
