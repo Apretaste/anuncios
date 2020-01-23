@@ -38,7 +38,9 @@ class Service
 		// add images to the response
 		$images = [];
 		foreach ($ads as $ad) {
-			$images[] = SHARED_PATH . 'ads/' . $ad->icon;
+			if($ad->icon) {
+				$images[] = IMG_PATH . 'ads/' . $ad->icon;
+			}
 		}
 
 		// send data to the view
@@ -78,6 +80,20 @@ class Service
 		// increate the ad's clicks
 		Database::query("UPDATE ads SET clicks=clicks+1 WHERE id=$id");
 
+		// create performance report
+		$today = Date('Y-m-d');
+		Database::query("
+			INSERT INTO ads_performance (inserted, ad_id, person_id, clicks) 
+			VALUES ('$today', $id, {$request->person->id}, 1)
+			ON DUPLICATE KEY UPDATE clicks=clicks+1");
+
+		// create demographics report
+		Database::query("
+			INSERT INTO ads_report (ad_id, person_id, method, os_type, gender, age, province, education) 
+			VALUES ($id, {$request->person->id}, '{$request->input->method}', '{$request->input->ostype}', 
+			NULLIF('{$request->person->gender}', ''), NULLIF('{$request->person->age}', ''), 
+			NULLIF('{$request->person->provinceCode}', ''), NULLIF('{$request->person->education}', ''))");
+
 		// make the description into HTML
 		$ad[0]->description = nl2br($ad[0]->description);
 
@@ -87,10 +103,7 @@ class Service
 			'ad' => $ad[0]];
 
 		// get image for the view
-		$image = [];
-		if($ad[0]->image) {
-			$image[] = SHARED_PATH . 'ads/' . $ad[0]->image;
-		}
+		$image = $ad[0]->image ? [IMG_PATH . 'ads/' . $ad[0]->image] : [];
 
 		// send data to the view
 		$response->setCache();
