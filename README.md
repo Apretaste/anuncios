@@ -1,2 +1,2 @@
-# ads
-Muestra las promociones más importantes corriendo en Apretaste
+# Anuncios
+Muestra las promociones más importantes corriendo en Apretaste.
