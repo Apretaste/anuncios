@@ -1,7 +1,7 @@
 <div class="row">
 	<ul class="collection">
 		<% ads.forEach(function(ad){ %>
-			<a href="#!" onclick="apretaste.send({command:'ADS VIEW', data:{'id':'<%= ad.id %>'}})" style="color:inherit;">
+			<a href="#!" onclick="apretaste.send({command:'ANUNCIOS VIEW', data:{'id':'<%= ad.id %>'}})" style="color:inherit;">
 				<li class="collection-item avatar">
 					<% if (ad.icon) { %>
 						<img src="{{APP_IMAGE_PATH}}<%= ad.icon %>" alt="<%= ad.icon %>" class="circle">

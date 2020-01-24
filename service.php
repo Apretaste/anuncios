@@ -39,7 +39,7 @@ class Service
 		$images = [];
 		foreach ($ads as $ad) {
 			if($ad->icon) {
-				$images[] = IMG_PATH . 'ads/' . $ad->icon;
+				$images[] = IMG_PATH . 'anuncios/' . $ad->icon;
 			}
 		}
 
@@ -70,11 +70,7 @@ class Service
 		// do not continue if ad cannot be found
 		if (empty($ad)) {
 			$response->setCache();
-			return $response->setTemplate('message.ejs', [
-				"header" => "Anuncio no encontrado",
-				"icon" => "sentiment_very_dissatisfied",
-				"text" => "Lamentablemente, el anuncio que buscas ha expirado o no existe en nuestro sistema. Revisa la lista de anuncios y escoge otro.",
-				"button" => ["href" => "ADS LIST", "caption" => "Ver anuncios"]]);
+			return $response->setTemplate('message.ejs');
 		}
 
 		// increate the ad's clicks
@@ -103,7 +99,7 @@ class Service
 			'ad' => $ad[0]];
 
 		// get image for the view
-		$image = $ad[0]->image ? [IMG_PATH . 'ads/' . $ad[0]->image] : [];
+		$image = $ad[0]->image ? [IMG_PATH . 'anuncios/' . $ad[0]->image] : [];
 
 		// send data to the view
 		$response->setCache();
