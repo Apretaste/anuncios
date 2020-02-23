@@ -86,7 +86,7 @@ class Service
 		// create demographics report
 		Database::query("
 			INSERT INTO ads_report (ad_id, person_id, method, os_type, gender, age, province, education) 
-			VALUES ($id, {$request->person->id}, NULLIF('{$request->input->method}', ''), NULLIF('{$request->input->osType}', ''), 
+			VALUES ($id, {$request->person->id}, '{$request->input->method}', '{$request->input->osType}',
 			NULLIF('{$request->person->gender}', ''), NULLIF('{$request->person->age}', ''), 
 			NULLIF('{$request->person->provinceCode}', ''), NULLIF('{$request->person->education}', ''))");
 
