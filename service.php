@@ -39,7 +39,7 @@ class Service
 		$images = [];
 		foreach ($ads as $ad) {
 			if($ad->icon) {
-				$images[] = IMG_PATH . 'anuncios/' . $ad->icon;
+				$images[] = SHARED_PUBLIC_PATH . 'anuncios/' . $ad->icon;
 			}
 		}
 
@@ -99,7 +99,7 @@ class Service
 			'ad' => $ad[0]];
 
 		// get image for the view
-		$image = $ad[0]->image ? [IMG_PATH . 'anuncios/' . $ad[0]->image] : [];
+		$image = $ad[0]->image ? [SHARED_PUBLIC_PATH . 'anuncios/' . $ad[0]->image] : [];
 
 		// send data to the view
 		$response->setCache();
