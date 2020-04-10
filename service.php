@@ -13,7 +13,7 @@ class Service
 	 * @param Request
 	 * @param Response
 	 */
-	public function _main(Request $request, Response &$response)
+	public function _main(Request $request, Response $response)
 	{
 		return $this->_list($request, $response);
 	}
@@ -24,7 +24,7 @@ class Service
 	 * @param Request $request
 	 * @param Response $response
 	 */
-	public function _list(Request $request, Response &$response)
+	public function _list(Request $request, Response $response)
 	{
 		// get the ads with better CTR
 		$where = Ad::getFilters($request->person);
@@ -54,7 +54,7 @@ class Service
 	 * @param Request $request
 	 * @param Response $response
 	 */
-	public function _view(Request $request, Response &$response)
+	public function _view(Request $request, Response $response)
 	{
 		// get the ad's id
 		$id = $request->input->data->id;
@@ -62,8 +62,8 @@ class Service
 		// get ad by id
 		$where = Ad::getFilters($request->person);
 		$ad = Database::query("
-			SELECT title, description, image, link, caption, author 
-			FROM ads 
+			SELECT title, description, image, link, caption 
+			FROM ads
 			$where
 			AND id = $id");
 
@@ -94,9 +94,7 @@ class Service
 		$ad[0]->description = nl2br($ad[0]->description);
 
 		// create the content for the view
-		$content = [
-			'isEmail' => $request->input->method == 'email',
-			'ad' => $ad[0]];
+		$content = ['ad' => $ad[0]];
 
 		// get image for the view
 		$image = $ad[0]->image ? [SHARED_PUBLIC_PATH . 'anuncios/' . $ad[0]->image] : [];

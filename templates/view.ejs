@@ -6,13 +6,11 @@
 		<p><%- ad.description %></p>
 	</div>
 
+	<% if(ad.link && ad.caption) { %>
 	<div class="col s12">
-		<% if(isEmail) { %>
-			<a class="btn waves-effect waves-light" href="mailto:<%= ad.author %>?subject=Sobre <%= ad.title %>">Contactar</a>
-		<% } else { %>
-			<a class="btn waves-effect waves-light" href="<%= ad.link %>"><%= ad.caption %></a>
-		<% } %>
+		<a class="btn waves-effect waves-light" href="<%= ad.link %>"><%= ad.caption %></a>
 	</div>
+	<% } %>
 </div>
 
 <div class="bottom-space"></div>
