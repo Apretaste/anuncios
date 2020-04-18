@@ -79,8 +79,8 @@ class Service
 		// create performance report
 		$today = Date('Y-m-d');
 		Database::query("
-			INSERT INTO ads_performance (inserted, ad_id, person_id, clicks) 
-			VALUES ('$today', $id, {$request->person->id}, 1)
+			INSERT INTO ads_performance (inserted, ad_id, clicks)
+			VALUES ('$today', $id, 1)
 			ON DUPLICATE KEY UPDATE clicks=clicks+1");
 
 		// create demographics report
