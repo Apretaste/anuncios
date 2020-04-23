@@ -27,11 +27,11 @@ class Service
 	public function _list(Request $request, Response $response)
 	{
 		// get the ads with better CTR
-		$where = Ad::getFilters($request->person);
+		$filters = Ad::getFilters($request->person);
 		$ads = Database::query("
 			SELECT id, title, subtitle, icon, ROUND((clicks * 100) / impressions) AS ctr
 			FROM ads 
-			$where
+			WHERE active = 1 $filters
 			ORDER BY ((clicks * 100) / impressions) DESC
 			LIMIT 10");
 
@@ -60,14 +60,13 @@ class Service
 		$id = $request->input->data->id;
 
 		// get ad by id
-		$where = Ad::getFilters($request->person);
-		$ad = Database::query("
+		$filters = Ad::getFilters($request->person);
+		$ad = Database::queryFirst("
 			SELECT title, description, image, link, caption 
 			FROM ads
-			$where
-			AND id = $id");
+			WHERE id = $id $filters");
 
-		// do not continue if ad cannot be found
+		// stop if ad cannot be found
 		if (empty($ad)) {
 			$response->setCache();
 			return $response->setTemplate('message.ejs');
@@ -91,13 +90,13 @@ class Service
 			NULLIF('{$request->person->provinceCode}', ''), NULLIF('{$request->person->education}', ''))");
 
 		// make the description into HTML
-		$ad[0]->description = nl2br($ad[0]->description);
+		$ad->description = nl2br($ad->description);
 
 		// create the content for the view
-		$content = ['ad' => $ad[0]];
+		$content = ['ad' => $ad];
 
 		// get image for the view
-		$image = $ad[0]->image ? [SHARED_PUBLIC_PATH . 'anuncios/' . $ad[0]->image] : [];
+		$image = $ad->image ? [SHARED_PUBLIC_PATH . 'anuncios/' . $ad->image] : [];
 
 		// send data to the view
 		$response->setCache();
