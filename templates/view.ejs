@@ -8,7 +8,11 @@
 
 	<% if(ad.link && ad.caption) { %>
 	<div class="col s12">
-		<a class="btn waves-effect waves-light" href="<%= ad.link %>"><%= ad.caption %></a>
+		<% if(isEmail) { %>
+			<a class="btn waves-effect waves-light" href="#!" onclick="getViaWeb(ad.link)"><%= ad.caption %></a>
+		<% } else { %>
+			<a class="btn waves-effect waves-light" target="_blank" href="<%= ad.link %>"><%= ad.caption %></a>
+		<% } %>
 	</div>
 	<% } %>
 </div>
@@ -16,7 +20,7 @@
 <div class="bottom-space"></div>
 
 <div class="fixed-action-btn hide-on-share">
-	<a class="btn-floating btn-large waves-effect waves-light" href="#!" onclick="apretaste.send({'command':'ANUNCIOS LIST'})">
+	<a class="btn-floating btn-large waves-effect waves-light" href="#!" onclick="goBack()">
 		<i class="material-icons">arrow_back</i>
 	</a>
 </div>

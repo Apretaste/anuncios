@@ -29,8 +29,8 @@ class Service
 		// get the ads with better CTR
 		$filters = Ad::getFilters($request->person);
 		$ads = Database::query("
-			SELECT id, title, subtitle, icon, ROUND((clicks * 100) / impressions) AS ctr
-			FROM ads 
+			SELECT id, title, subtitle, icon
+			FROM ads
 			WHERE active = 1 $filters
 			ORDER BY ((clicks * 100) / impressions) DESC
 			LIMIT 10");
@@ -93,7 +93,9 @@ class Service
 		$ad->description = nl2br($ad->description);
 
 		// create the content for the view
-		$content = ['ad' => $ad];
+		$content = [
+			'isEmail' => $request->input->method == 'email',
+			'ad' => $ad];
 
 		// get image for the view
 		$image = $ad->image ? [SHARED_PUBLIC_PATH . 'anuncios/' . $ad->image] : [];
