@@ -4,6 +4,7 @@ use Apretaste\Ad;
 use Apretaste\Request;
 use Apretaste\Response;
 use Framework\Database;
+use Framework\GoogleAnalytics;
 
 class Service
 {
@@ -99,6 +100,9 @@ class Service
 
 		// get image for the view
 		$image = $ad->image ? [SHARED_PUBLIC_PATH . 'anuncios/' . $ad->image] : [];
+
+		// submit to Google Analytics 
+		GoogleAnalytics::event('ad_open', $ad->title);
 
 		// send data to the view
 		$response->setCache();
