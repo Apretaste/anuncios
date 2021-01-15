@@ -15,6 +15,10 @@
 	font-weight: bold;
 }
 
+.ad-content {
+	overflow-x: scroll;
+}
+
 .collection {
     border: 0px;
 }
