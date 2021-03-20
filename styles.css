@@ -22,3 +22,7 @@
 .collection {
     border: 0px;
 }
+
+.responsive-img {
+	width: 100%;
+}
