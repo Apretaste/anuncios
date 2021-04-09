@@ -1,6 +1,7 @@
 <?php
 
 use Apretaste\Ad;
+use Apretaste\Bucket;
 use Apretaste\Request;
 use Apretaste\Response;
 use Framework\Database;
@@ -40,7 +41,7 @@ class Service
 		$images = [];
 		foreach ($ads as $ad) {
 			if($ad->icon) {
-				$images[] = SHARED_PUBLIC_PATH . 'anuncios/' . $ad->icon;
+				$images[] = Bucket::download('anuncios', $ad->icon);
 			}
 		}
 
@@ -99,7 +100,7 @@ class Service
 			'ad' => $ad];
 
 		// get image for the view
-		$image = $ad->image ? [SHARED_PUBLIC_PATH . 'anuncios/' . $ad->image] : [];
+		$image = $ad->image ? [Bucket::download('anuncios', $ad->image)] : [];
 
 		// submit to Google Analytics 
 		GoogleAnalytics::event('ad_open', $ad->title);
