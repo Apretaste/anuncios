@@ -41,7 +41,11 @@ class Service
 		$images = [];
 		foreach ($ads as $ad) {
 			if($ad->icon) {
-				$images[] = Bucket::download('anuncios', $ad->icon);
+				try {
+					$images[] = Bucket::download('anuncios', $ad->icon);
+				} catch(Exception $e) {
+
+				}
 			}
 		}
 
@@ -100,7 +104,15 @@ class Service
 			'ad' => $ad];
 
 		// get image for the view
-		$image = $ad->image ? [Bucket::download('anuncios', $ad->image)] : [];
+		$imagePath = false;
+
+		try {
+			$imagePath= Bucket::download('anuncios', $ad->image);
+		} catch(Exception $e) {
+
+		}
+
+		$image = $ad->image && $imagePath ? [$imagePath] : [];
 
 		// submit to Google Analytics 
 		GoogleAnalytics::event('ad_open', $ad->title);
