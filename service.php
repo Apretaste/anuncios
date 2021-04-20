@@ -4,8 +4,8 @@ use Apretaste\Ad;
 use Apretaste\Bucket;
 use Apretaste\Request;
 use Apretaste\Response;
-use Framework\Database;
-use Framework\GoogleAnalytics;
+use Apretaste\Database;
+use Apretaste\GoogleAnalytics;
 
 class Service
 {
@@ -41,11 +41,7 @@ class Service
 		$images = [];
 		foreach ($ads as $ad) {
 			if($ad->icon) {
-				try {
-					$images[] = Bucket::download('anuncios', $ad->icon);
-				} catch(Exception $e) {
-
-				}
+				$images[] = Bucket::getPathByEnvironment('anuncios', $ad->icon);
 			}
 		}
 
@@ -101,17 +97,11 @@ class Service
 		// create the content for the view
 		$content = [
 			'isEmail' => $request->input->method == 'email',
-			'ad' => $ad];
+			'ad' => $ad
+		];
 
 		// get image for the view
-		$imagePath = false;
-
-		try {
-			$imagePath= Bucket::download('anuncios', $ad->image);
-		} catch(Exception $e) {
-
-		}
-
+		$imagePath = Bucket::getPathByEnvironment('anuncios', $ad->image);
 		$image = $ad->image && $imagePath ? [$imagePath] : [];
 
 		// submit to Google Analytics 
