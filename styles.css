@@ -8,6 +8,11 @@
 	overflow-x: scroll;
 }
 
+.ad-content ul:not(.browser-default), ul:not(.browser-default) li {
+	padding-left: revert;
+	list-style-type: disc;
+}
+
 .responsive-img {
 	width: 100%;
 }
