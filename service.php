@@ -4,7 +4,7 @@ use Apretaste\Ad;
 use Apretaste\Bucket;
 use Apretaste\Request;
 use Apretaste\Response;
-use Framework\Database;
+use Apretaste\Database;
 use Framework\GoogleAnalytics;
 
 class Service
@@ -33,19 +33,15 @@ class Service
 		$ads = Database::query("
 			SELECT id, title, subtitle, icon
 			FROM ads
-			WHERE active = 1 $filters
-			ORDER BY ((clicks * 100) / impressions) DESC
-			LIMIT 10");
+			WHERE status='ACTIVE'
+			$filters
+			ORDER BY ((clicks * 100) / impressions) DESC");
 
 		// add images to the response
 		$images = [];
 		foreach ($ads as $ad) {
 			if($ad->icon) {
-				try {
-					$images[] = Bucket::download('anuncios', $ad->icon);
-				} catch(Exception $e) {
-
-				}
+				$images[] = Bucket::getPathByEnvironment('anuncios', $ad->icon);
 			}
 		}
 
@@ -66,11 +62,7 @@ class Service
 		$id = $request->input->data->id;
 
 		// get ad by id
-		$filters = Ad::getFilters($request->person);
-		$ad = Database::queryFirst("
-			SELECT title, description, image, link, caption 
-			FROM ads
-			WHERE id = $id $filters");
+		$ad = Ad::find($id);
 
 		// stop if ad cannot be found
 		if (empty($ad)) {
@@ -95,30 +87,38 @@ class Service
 			NULLIF('{$request->person->gender}', ''), NULLIF('{$request->person->age}', ''), 
 			NULLIF('{$request->person->provinceCode}', ''), NULLIF('{$request->person->education}', ''))");
 
-		// make the description into HTML
-		$ad->description = nl2br($ad->description);
+		// submit to Google Analytics 
+		GoogleAnalytics::event('ad_open', $ad->title);
+
+		// keep only important properties
+		$props = ['image','description','facebook','twitter','instagram','email','phone','gallery','btnLink','btnCaption','btnColor'];
+		foreach ($ad as $key=>$val) {
+			if(!in_array($key, $props)) {
+				unset($ad->$key);
+			}
+		}
+
+		// get image for the view
+		$images = [];
+		if($ad->image) {
+			$images[] = $ad->image;
+			$ad->image = basename($ad->image);
+		}
+
+		// add the gallery to the array of images
+		for ($i=0; $i < count($ad->gallery); $i++) { 
+			$images[] = $ad->gallery[$i]->img;
+			$ad->gallery[$i] = basename($ad->gallery[$i]->img);
+		}
 
 		// create the content for the view
 		$content = [
 			'isEmail' => $request->input->method == 'email',
-			'ad' => $ad];
-
-		// get image for the view
-		$imagePath = false;
-
-		try {
-			$imagePath= Bucket::download('anuncios', $ad->image);
-		} catch(Exception $e) {
-
-		}
-
-		$image = $ad->image && $imagePath ? [$imagePath] : [];
-
-		// submit to Google Analytics 
-		GoogleAnalytics::event('ad_open', $ad->title);
+			'ad' => $ad
+		];
 
 		// send data to the view
 		$response->setCache();
-		$response->setTemplate('view.ejs', $content, $image);
+		$response->setTemplate('view.ejs', $content, $images);
 	}
 }

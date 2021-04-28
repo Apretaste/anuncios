@@ -1,19 +1,27 @@
-<div class="row">
-	<ul class="collection">
-		<% ads.forEach(function(ad){ %>
-			<a href="#!" onclick="apretaste.send({command:'ANUNCIOS VIEW', data:{'id':'<%= ad.id %>'}})" style="color:inherit;">
-				<li class="collection-item avatar">
-					<% if (ad.icon) { %>
-						<img src="{{APP_IMAGE_PATH}}<%= ad.icon %>" alt="<%= ad.icon %>" class="circle">
-					<% } %>
-					<span class="title green-text"><%= ad.title %></span>
-					<p class="subtitle"><%= ad.subtitle %></p>
-				</li>
-			</a>
-		<% }) %>
-	</ul>
+<% if(ads.length) { %>
+	<div class="row">
+		<ul class="collection">
+			<% ads.forEach(function(ad){ %>
+				<a href="#!" onclick="apretaste.send({command:'ANUNCIOS VIEW', data:{id:'<%= ad.id %>'}})" style="color:inherit;">
+					<li class="collection-item avatar">
+						<% if (ad.icon) { %>
+							<img src="{{APP_IMAGE_PATH}}<%= ad.icon %>" alt="<%= ad.icon %>" class="circle">
+						<% } %>
+						<span class="title"><%= ad.title %></span>
+						<p class="blue-grey-text"><%= ad.subtitle %></p>
+					</li>
+				</a>
+			<% }) %>
+		</ul>
 
-	<div class="col s12 center-align">
-		<p><small>¿No desea ver anuncios? <a href="#!" onclick="apretaste.send({command:'AMULETOS STORE'})">El Druida le puede ayudar.</a></small></p>
+		<div class="col s12 center-align">
+			<p><small>¿No desea ver anuncios? <a href="#!" onclick="apretaste.send({command:'AMULETOS STORE'})">El Druida le puede ayudar</a></small></p>
+		</div>
 	</div>
-</div>
+<% } else { %>
+	<div class="row">
+		<div class="col s12 center">
+			<p class="middle-center grey-text">No encontramos ningún anuncio. Espere unos días y revise nuevamente.</p>
+		</div>
+	</div>
+<% } %>

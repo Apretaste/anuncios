@@ -1,26 +1,72 @@
-<img class="responsive-img z-depth-3 delete-if-no-image" src="{{APP_IMAGE_PATH}}<%= ad.image %>" alt="<%= ad.image %>">
+<!-- image -->
+<% if(ad.image) { %>
+	<img class="responsive-img z-depth-3 delete-if-no-image" src="{{APP_IMAGE_PATH}}<%= ad.image %>" alt="<%= ad.image %>">
+<% } %>
 
 <div class="row">
 	<div class="col s12">
-		<p class="ad-title"><%= ad.title %></p>
+		<!-- description -->
 		<p class="ad-content"><%- ad.description %></p>
-	</div>
 
-	<% if(ad.link && ad.caption) { %>
-	<div class="col s12">
-		<% if(isEmail) { %>
-			<a class="btn waves-effect waves-light" href="#!" onclick="getViaWeb(ad.link)"><%= ad.caption %></a>
-		<% } else { %>
-			<a class="btn waves-effect waves-light" target="_blank" href="<%= ad.link %>"><%= ad.caption %></a>
+		<!-- links -->
+		<% if(ad.facebook || ad.twitter || ad.instagram || ad.email || ad.phone) { %>
+			<ul class="collection one-line">
+				<% if(ad.facebook) { %>
+					<li class="collection-item avatar">
+						<i class="fab fa-facebook-f circle"></i>
+						<span class="title">Visitar Facebook</span>
+						<a href="#!" onclick="openWeb(ad.facebook, isEmail)" class="secondary-content"><i class="fas fa-arrow-right"></i></a>
+					</li>
+				<% } %>
+				<% if(ad.twitter) { %>
+					<li class="collection-item avatar">
+						<i class="fab fa-twitter circle"></i>
+						<span class="title">Visitar Twitter</span>
+						<a href="#!" onclick="openWeb(ad.twitter, isEmail)" class="secondary-content"><i class="fas fa-arrow-right"></i></a>
+					</li>
+				<% } %>
+				<% if(ad.instagram) { %>
+					<li class="collection-item avatar">
+						<i class="fab fa-instagram circle"></i>
+						<span class="title">Visitar Instagram</span>
+						<a href="#!" onclick="openWeb(ad.instagram, isEmail)" class="secondary-content"><i class="fas fa-arrow-right"></i></a>
+					</li>
+				<% } %>
+				<% if(ad.email) { %>
+					<li class="collection-item avatar">
+						<i class="fas fa-envelope circle"></i>
+						<span class="title"><%= ad.email %></span>
+						<a href="mailto:<%= ad.email %>" class="secondary-content"><i class="fas fa-arrow-right"></i></a>
+					</li>
+				<% } %>
+				<% if(ad.phone) { %>
+					<li class="collection-item avatar">
+						<i class="fas fa-phone circle"></i>
+						<span class="title"><%= ad.phone %></span>
+					</li>
+				<% } %>
+			</ul>
+		<% } %>
+
+		<!-- gallery -->
+		<div id="gallery" class="row">
+			<% ad.gallery.forEach(function(item) { %>
+				<% var src = '{{APP_IMAGE_PATH}}' + item %>
+				<img class="col s6" src="<%= src %>" onclick="apretaste.showImage('<%= src %>')">
+			<% }) %>
+		</div>
+
+		<!-- button -->
+		<% if(ad.btnLink && ad.btnCaption && ad.btnColor) { %>
+			<a class="btn responsive-img" style="background-color:<%= ad.btnColor %>;" href="#!" onclick="openWeb(ad.btnLink, isEmail)"><%= ad.btnCaption %></a>
 		<% } %>
 	</div>
-	<% } %>
 </div>
 
 <div class="bottom-space"></div>
 
 <div class="fixed-action-btn hide-on-share">
-	<a class="btn-floating btn-large waves-effect waves-light" href="#!" onclick="goBack()">
+	<a class="btn-floating btn-large waves-effect waves-light" href="#!" onclick="apretaste.back()">
 		<i class="material-icons">arrow_back</i>
 	</a>
 </div>

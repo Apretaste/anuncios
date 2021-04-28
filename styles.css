@@ -1,28 +1,34 @@
-.collection-item .subtitle {
-	font-size: smaller;
-}
-
-.collection-item .circle {
-	border-radius: 0px;
-}
+/* GLOBAL */
 
 .bottom-space {
 	margin-bottom: 80px;
-}
-
-.ad-title {
-	font-size: larger;
-	font-weight: bold;
 }
 
 .ad-content {
 	overflow-x: scroll;
 }
 
-.collection {
-    border: 0px;
-}
-
 .responsive-img {
 	width: 100%;
+}
+
+#gallery .col {
+	padding: 0px;
+}
+
+/* ONE LINE COLLECTION */
+
+.collection.one-line .avatar {
+	min-height: 63px;
+}
+
+.collection.one-line .collection-item .title {
+	line-height: 3rem;
+	font-size: 18px;
+}
+
+/* EMPTY TEMPLATE */
+
+.middle-center {
+	padding: 150px 40px 0px 40px;
 }
